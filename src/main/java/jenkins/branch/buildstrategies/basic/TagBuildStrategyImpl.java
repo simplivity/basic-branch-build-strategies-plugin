@@ -113,6 +113,14 @@ public class TagBuildStrategyImpl extends BranchBuildStrategy {
      * {@inheritDoc}
      */
     @Override
+    public boolean isApplicable(SCMHead head) {
+        return head instanceof TagSCMHead;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean isAutomaticBuild(@NonNull SCMSource source, @NonNull SCMHead head, @NonNull SCMRevision currRevision,
                                     @CheckForNull SCMRevision prevRevision) {
         if (!(head instanceof TagSCMHead)) {

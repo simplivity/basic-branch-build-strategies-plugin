@@ -52,14 +52,22 @@ public class BranchBuildStrategyImpl extends BranchBuildStrategy {
      * {@inheritDoc}
      */
     @Override
-    public boolean isAutomaticBuild(@NonNull SCMSource source, @NonNull SCMHead head, @NonNull SCMRevision currRevision,
-                                    SCMRevision prevRevision) {
+    public boolean isApplicable(SCMHead head) {
         if (head instanceof ChangeRequestSCMHead) {
             return false;
         }
         if (head instanceof TagSCMHead) {
             return false;
         }
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isAutomaticBuild(@NonNull SCMSource source, @NonNull SCMHead head, @NonNull SCMRevision currRevision,
+                                    SCMRevision prevRevision) {
         return true;
     }
 

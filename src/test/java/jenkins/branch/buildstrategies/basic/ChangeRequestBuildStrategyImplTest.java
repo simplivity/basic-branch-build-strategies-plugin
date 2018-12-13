@@ -39,32 +39,22 @@ import static org.junit.Assert.*;
 
 public class ChangeRequestBuildStrategyImplTest {
     @Test
-    public void given__regular_head__when__isAutomaticBuild__then__returns_false() throws Exception {
+    public void given__regular_head__when__isApplicable__then__returns_false() throws Exception {
         try (MockSCMController c = MockSCMController.create()) {
             MockSCMHead head = new MockSCMHead("master");
             assertThat(
-                    new ChangeRequestBuildStrategyImpl(false).isAutomaticBuild(
-                            new MockSCMSource(c, "dummy"),
-                            head,
-                            new MockSCMRevision(head, "dummy"),
-                            null
-                    ),
+                    new ChangeRequestBuildStrategyImpl(false).isApplicable(head),
                     is(false)
             );
         }
     }
 
     @Test
-    public void given__tag_head__when__isAutomaticBuild__then__returns_false() throws Exception {
+    public void given__tag_head__when__isApplicable__then__returns_false() throws Exception {
         try (MockSCMController c = MockSCMController.create()) {
             MockSCMHead head = new MockTagSCMHead("master", System.currentTimeMillis());
             assertThat(
-                    new ChangeRequestBuildStrategyImpl(false).isAutomaticBuild(
-                            new MockSCMSource(c, "dummy"),
-                            head,
-                            new MockSCMRevision(head, "dummy"),
-                            null
-                    ),
+                    new ChangeRequestBuildStrategyImpl(false).isApplicable(head),
                     is(false)
             );
         }

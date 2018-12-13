@@ -66,11 +66,16 @@ public class ChangeRequestBuildStrategyImpl extends BranchBuildStrategy {
      * {@inheritDoc}
      */
     @Override
+    public boolean isApplicable(SCMHead head) {
+        return head instanceof ChangeRequestSCMHead;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean isAutomaticBuild(@NonNull SCMSource source, @NonNull SCMHead head, @NonNull SCMRevision currRevision,
                                     @CheckForNull SCMRevision prevRevision) {
-        if (!(head instanceof ChangeRequestSCMHead)) {
-            return false;
-        }
         if (ignoreTargetOnlyChanges
                 && currRevision instanceof ChangeRequestSCMRevision
                 && prevRevision instanceof ChangeRequestSCMRevision) {
