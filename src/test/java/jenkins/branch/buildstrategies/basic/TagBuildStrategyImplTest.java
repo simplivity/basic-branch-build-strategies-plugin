@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 import jenkins.scm.api.SCMHeadOrigin;
 import jenkins.scm.api.mixin.ChangeRequestCheckoutStrategy;
 import jenkins.scm.impl.mock.MockChangeRequestSCMHead;
-import jenkins.scm.impl.mock.MockChangeRequestSCMRevision;
 import jenkins.scm.impl.mock.MockSCMController;
 import jenkins.scm.impl.mock.MockSCMHead;
 import jenkins.scm.impl.mock.MockSCMRevision;
@@ -44,12 +43,7 @@ public class TagBuildStrategyImplTest {
         try (MockSCMController c = MockSCMController.create()) {
             MockSCMHead head = new MockSCMHead("master");
             assertThat(
-                    new TagBuildStrategyImpl(null, null).isAutomaticBuild(
-                            new MockSCMSource(c, "dummy"),
-                            head,
-                            new MockSCMRevision(head, "dummy"),
-                            null
-                    ),
+                    new TagBuildStrategyImpl(null, null).isApplicable(head),
                     is(false)
             );
         }
@@ -202,18 +196,12 @@ public class TagBuildStrategyImplTest {
     }
 
     @Test
-    public void given__cr_head__when__isAutomaticBuild__then__returns_false() throws Exception {
+    public void given__cr_head__when__isApplicable__then__returns_false() throws Exception {
         try (MockSCMController c = MockSCMController.create()) {
             MockChangeRequestSCMHead head = new MockChangeRequestSCMHead(SCMHeadOrigin.DEFAULT, 1, "master",
                     ChangeRequestCheckoutStrategy.MERGE, true);
             assertThat(
-                    new TagBuildStrategyImpl(null, null).isAutomaticBuild(
-                            new MockSCMSource(c, "dummy"),
-                            head,
-                            new MockChangeRequestSCMRevision(head,
-                                    new MockSCMRevision(new MockSCMHead("master"), "dummy"), "dummy"),
-                            null
-                    ),
+                    new TagBuildStrategyImpl(null, null).isApplicable(head),
                     is(false)
             );
         }

@@ -76,14 +76,22 @@ public class NamedBranchBuildStrategyImpl extends BranchBuildStrategy {
      * {@inheritDoc}
      */
     @Override
-    public boolean isAutomaticBuild(@NonNull SCMSource source, @NonNull SCMHead head, @NonNull SCMRevision currRevision,
-                                    SCMRevision prevRevision) {
+    public boolean isApplicable(SCMHead head) {
         if (head instanceof ChangeRequestSCMHead) {
             return false;
         }
         if (head instanceof TagSCMHead) {
             return false;
         }
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isAutomaticBuild(@NonNull SCMSource source, @NonNull SCMHead head, @NonNull SCMRevision currRevision,
+                                    SCMRevision prevRevision) {
         String name = head.getName();
         for (NameFilter filter: filters) {
             if (filter.isMatch(name)) {

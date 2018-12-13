@@ -26,7 +26,6 @@ package jenkins.branch.buildstrategies.basic;
 import jenkins.scm.api.SCMHeadOrigin;
 import jenkins.scm.api.mixin.ChangeRequestCheckoutStrategy;
 import jenkins.scm.impl.mock.MockChangeRequestSCMHead;
-import jenkins.scm.impl.mock.MockChangeRequestSCMRevision;
 import jenkins.scm.impl.mock.MockSCMController;
 import jenkins.scm.impl.mock.MockSCMHead;
 import jenkins.scm.impl.mock.MockSCMRevision;
@@ -55,34 +54,23 @@ public class BranchBuildStrategyImplTest {
     }
 
     @Test
-    public void given__tag_head__when__isAutomaticBuild__then__returns_false() throws Exception {
+    public void given__tag_head__when__isApplicable__then__returns_false() throws Exception {
         try (MockSCMController c = MockSCMController.create()) {
             MockSCMHead head = new MockTagSCMHead("master", System.currentTimeMillis());
             assertThat(
-                    new BranchBuildStrategyImpl().isAutomaticBuild(
-                            new MockSCMSource(c, "dummy"),
-                            head,
-                            new MockSCMRevision(head, "dummy"),
-                            null
-                    ),
+                    new BranchBuildStrategyImpl().isApplicable(head),
                     is(false)
             );
         }
     }
 
     @Test
-    public void given__cr_head__when__isAutomaticBuild__then__returns_false() throws Exception {
+    public void given__cr_head__when__isApplicable__then__returns_false() throws Exception {
         try (MockSCMController c = MockSCMController.create()) {
             MockChangeRequestSCMHead head = new MockChangeRequestSCMHead(SCMHeadOrigin.DEFAULT, 1, "master",
                     ChangeRequestCheckoutStrategy.MERGE, true);
             assertThat(
-                    new BranchBuildStrategyImpl().isAutomaticBuild(
-                            new MockSCMSource(c, "dummy"),
-                            head,
-                            new MockChangeRequestSCMRevision(head,
-                                    new MockSCMRevision(new MockSCMHead("master"), "dummy"), "dummy"),
-                            null
-                    ),
+                    new BranchBuildStrategyImpl().isApplicable(head),
                     is(false)
             );
         }

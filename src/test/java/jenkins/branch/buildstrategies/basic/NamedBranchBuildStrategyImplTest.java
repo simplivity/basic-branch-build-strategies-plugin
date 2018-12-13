@@ -28,7 +28,6 @@ import java.util.Collections;
 import jenkins.scm.api.SCMHeadOrigin;
 import jenkins.scm.api.mixin.ChangeRequestCheckoutStrategy;
 import jenkins.scm.impl.mock.MockChangeRequestSCMHead;
-import jenkins.scm.impl.mock.MockChangeRequestSCMRevision;
 import jenkins.scm.impl.mock.MockSCMController;
 import jenkins.scm.impl.mock.MockSCMHead;
 import jenkins.scm.impl.mock.MockSCMRevision;
@@ -59,38 +58,27 @@ public class NamedBranchBuildStrategyImplTest {
     }
 
     @Test
-    public void given__tag_head__when__isAutomaticBuild__then__returns_false() throws Exception {
+    public void given__tag_head__when__isApplicable__then__returns_false() throws Exception {
         try (MockSCMController c = MockSCMController.create()) {
             MockSCMHead head = new MockTagSCMHead("master", System.currentTimeMillis());
             assertThat(
                     new NamedBranchBuildStrategyImpl(Collections.<NamedBranchBuildStrategyImpl.NameFilter>singletonList(
                             new NamedBranchBuildStrategyImpl.ExactNameFilter("master", false))
-                    ).isAutomaticBuild(
-                            new MockSCMSource(c, "dummy"),
-                            head,
-                            new MockSCMRevision(head, "dummy"),
-                            null
-                    ),
+                    ).isApplicable(head),
                     is(false)
             );
         }
     }
 
     @Test
-    public void given__cr_head__when__isAutomaticBuild__then__returns_false() throws Exception {
+    public void given__cr_head__when__isApplicable__then__returns_false() throws Exception {
         try (MockSCMController c = MockSCMController.create()) {
             MockChangeRequestSCMHead head = new MockChangeRequestSCMHead(SCMHeadOrigin.DEFAULT, 1, "master",
                     ChangeRequestCheckoutStrategy.MERGE, true);
             assertThat(
                     new NamedBranchBuildStrategyImpl(Collections.<NamedBranchBuildStrategyImpl.NameFilter>singletonList(
                             new NamedBranchBuildStrategyImpl.RegexNameFilter("^.*$", false))
-                    ).isAutomaticBuild(
-                            new MockSCMSource(c, "dummy"),
-                            head,
-                            new MockChangeRequestSCMRevision(head,
-                                    new MockSCMRevision(new MockSCMHead("master"), "dummy"), "dummy"),
-                            null
-                    ),
+                    ).isApplicable(head),
                     is(false)
             );
         }
